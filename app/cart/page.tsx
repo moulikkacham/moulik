@@ -11,8 +11,6 @@ export default function CartPage() {
   const router = useRouter()
   const { items, removeItem, updateQuantity, getTotalPrice } = useCart()
 
-  const EXCHANGE_RATE = 83
-
   if (items.length === 0) {
     return (
       <div className="min-h-screen bg-background">
@@ -42,7 +40,6 @@ export default function CartPage() {
   }
 
   const totalPrice = getTotalPrice()
-  const totalPriceINR = totalPrice * EXCHANGE_RATE
 
   return (
     <div className="min-h-screen bg-background">
@@ -87,11 +84,9 @@ export default function CartPage() {
 
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <span className="text-lg font-bold text-foreground">
-                          ₹{(item.price * EXCHANGE_RATE).toFixed(2)}
-                        </span>
+                        <span className="text-lg font-bold text-foreground">₹{item.price.toFixed(2)}</span>
                         <span className="text-sm text-muted-foreground line-through">
-                          ₹{(item.originalPrice * EXCHANGE_RATE).toFixed(2)}
+                          ₹{item.originalPrice.toFixed(2)}
                         </span>
                       </div>
 
@@ -135,7 +130,7 @@ export default function CartPage() {
                 <div className="space-y-3 border-b border-border pb-4">
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Subtotal</span>
-                    <span className="text-foreground font-medium">₹{totalPriceINR.toFixed(2)}</span>
+                    <span className="text-foreground font-medium">₹{totalPrice.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Pickup Fee</span>
@@ -143,13 +138,13 @@ export default function CartPage() {
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Tax</span>
-                    <span className="text-foreground font-medium">₹{(totalPriceINR * 0.08).toFixed(2)}</span>
+                    <span className="text-foreground font-medium">₹{(totalPrice * 0.08).toFixed(2)}</span>
                   </div>
                 </div>
 
                 <div className="flex justify-between pt-4">
                   <span className="font-bold text-foreground">Total</span>
-                  <span className="text-2xl font-bold text-primary">₹{(totalPriceINR * 1.08).toFixed(2)}</span>
+                  <span className="text-2xl font-bold text-primary">₹{(totalPrice * 1.08).toFixed(2)}</span>
                 </div>
               </div>
 
@@ -172,7 +167,7 @@ export default function CartPage() {
                   <span className="font-semibold">💚 You're saving</span> ₹
                   {items
                     .reduce((total, item) => total + (item.originalPrice - item.price) * item.quantity, 0)
-                    .toFixed(2) * EXCHANGE_RATE}{" "}
+                    .toFixed(2)}{" "}
                   by using Meal Share!
                 </p>
               </div>

@@ -19,8 +19,6 @@ export default function CheckoutPage() {
     tax: number
   } | null>(null)
 
-  const EXCHANGE_RATE = 83
-
   if (items.length === 0 && !orderPlaced) {
     return (
       <div className="min-h-screen bg-background">
@@ -43,16 +41,15 @@ export default function CheckoutPage() {
   }
 
   const totalPrice = getTotalPrice()
-  const totalPriceINR = totalPrice * EXCHANGE_RATE
-  const taxAmountINR = totalPriceINR * 0.08
-  const finalTotalINR = totalPriceINR + taxAmountINR
+  const taxAmount = totalPrice * 0.08
+  const finalTotal = totalPrice + taxAmount
 
   const handlePlaceOrder = async () => {
     setIsProcessing(true)
     setOrderDetails({
       items: items,
       total: totalPrice,
-      tax: totalPrice * 0.08,
+      tax: taxAmount,
     })
     // Simulate payment processing
     await new Promise((resolve) => setTimeout(resolve, 2000))
@@ -64,9 +61,7 @@ export default function CheckoutPage() {
     const displayItems = orderDetails?.items || []
     const displayTotal = orderDetails?.total || 0
     const displayTax = orderDetails?.tax || 0
-    const displayTotalINR = displayTotal * EXCHANGE_RATE
-    const displayTaxINR = displayTax * EXCHANGE_RATE
-    const displayFinalTotalINR = displayTotalINR + displayTaxINR
+    const displayFinalTotal = displayTotal + displayTax
 
     return (
       <div className="min-h-screen bg-background">
@@ -116,9 +111,7 @@ export default function CheckoutPage() {
                       <span className="text-muted-foreground">
                         {item.title} x{item.quantity}
                       </span>
-                      <span className="font-medium text-foreground">
-                        ₹{(item.price * item.quantity * EXCHANGE_RATE).toFixed(2)}
-                      </span>
+                      <span className="font-medium text-foreground">₹{(item.price * item.quantity).toFixed(2)}</span>
                     </div>
                   ))}
                 </div>
@@ -127,15 +120,15 @@ export default function CheckoutPage() {
               <div className="border-t border-border mt-4 pt-4 space-y-2">
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Subtotal</span>
-                  <span className="font-medium text-foreground">₹{displayTotalINR.toFixed(2)}</span>
+                  <span className="font-medium text-foreground">₹{displayTotal.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Tax (8%)</span>
-                  <span className="font-medium text-foreground">₹{displayTaxINR.toFixed(2)}</span>
+                  <span className="font-medium text-foreground">₹{displayTax.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between pt-2 border-t border-border">
                   <span className="font-bold text-foreground">Total Amount</span>
-                  <span className="text-2xl font-bold text-primary">₹{displayFinalTotalINR.toFixed(2)}</span>
+                  <span className="text-2xl font-bold text-primary">₹{displayFinalTotal.toFixed(2)}</span>
                 </div>
               </div>
             </div>
@@ -287,9 +280,7 @@ export default function CheckoutPage() {
                       <span className="text-muted-foreground">
                         {item.title} x{item.quantity}
                       </span>
-                      <span className="text-foreground font-medium">
-                        ₹{(item.price * item.quantity * EXCHANGE_RATE).toFixed(2)}
-                      </span>
+                      <span className="text-foreground font-medium">₹{(item.price * item.quantity).toFixed(2)}</span>
                     </div>
                   ))}
                 </div>
@@ -297,15 +288,15 @@ export default function CheckoutPage() {
                 <div className="border-t border-border pt-4 space-y-3">
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Subtotal</span>
-                    <span className="text-foreground font-medium">₹{totalPriceINR.toFixed(2)}</span>
+                    <span className="text-foreground font-medium">₹{totalPrice.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Tax (8%)</span>
-                    <span className="text-foreground font-medium">₹{taxAmountINR.toFixed(2)}</span>
+                    <span className="text-foreground font-medium">₹{taxAmount.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between pt-3 border-t border-border">
                     <span className="font-bold text-foreground">Total</span>
-                    <span className="text-2xl font-bold text-primary">₹{finalTotalINR.toFixed(2)}</span>
+                    <span className="text-2xl font-bold text-primary">₹{finalTotal.toFixed(2)}</span>
                   </div>
                 </div>
               </div>

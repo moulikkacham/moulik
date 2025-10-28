@@ -1,13 +1,14 @@
 import { type NextRequest, NextResponse } from "next/server"
 
+// In-memory storage for registered users (in production, use a real database)
+const registeredUsers: any[] = []
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
     const { email, password, name, role } = body
 
-    // Get all registered users from a mock database (in real app, this would be from actual database)
-    const registeredUsers = JSON.parse(localStorage?.getItem?.("registered-users") || "[]")
-
+    // Check if user already exists
     const userExists = registeredUsers.some((user: any) => user.email === email)
 
     if (userExists) {
@@ -29,11 +30,8 @@ export async function POST(request: NextRequest) {
       createdAt: new Date(),
     }
 
-    // Store the new user in registered users list
+    // Store the new user in memory
     registeredUsers.push(newUser)
-
-    // Note: In a real app, this would be stored in a database
-    // For now, we're using a mock approach
 
     return NextResponse.json(
       {

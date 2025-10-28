@@ -44,8 +44,8 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
     addItem({
       id: listing.id,
       title: listing.title,
-      price: listing.price,
-      originalPrice: listing.originalPrice,
+      price: listing.price, // Already in rupees (45)
+      originalPrice: listing.originalPrice, // Already in rupees (89)
       image: listing.image,
       location: listing.location,
       quantity: 1,
