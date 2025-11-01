@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Leaf, User, ShoppingBag, MapPin, Mail, Phone, LogOut } from "lucide-react"
+import { useLocation } from "@/lib/location-context"
 
 interface Order {
   id: string
@@ -28,6 +29,10 @@ interface UserProfile {
 
 export default function ProfilePage() {
   const router = useRouter()
+  const { userLocation, setUserLocation } = useLocation()
+  const [isEditingLocation, setIsEditingLocation] = useState(false)
+  const [locationInput, setLocationInput] = useState(userLocation)
+
   const [orders, setOrders] = useState<Order[]>([
     {
       id: "MS123ABC456",
@@ -63,7 +68,8 @@ export default function ProfilePage() {
     if (savedProfile) {
       setUserProfile(JSON.parse(savedProfile))
     }
-  }, [])
+    setLocationInput(userLocation)
+  }, [userLocation])
 
   const handleLogout = () => {
     localStorage.removeItem("authToken")
@@ -73,6 +79,13 @@ export default function ProfilePage() {
 
   const handleEditProfile = () => {
     router.push("/profile/edit")
+  }
+
+  const handleSaveLocation = () => {
+    if (locationInput.trim()) {
+      setUserLocation(locationInput)
+      setIsEditingLocation(false)
+    }
   }
 
   const joinedDate = "March 15, 2024"
@@ -147,6 +160,34 @@ export default function ProfilePage() {
                     <p className="text-xs text-muted-foreground">Address</p>
                     <p className="text-sm font-medium text-foreground">{userProfile.address}</p>
                   </div>
+                </div>
+
+                <div className="border-t border-border pt-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <p className="text-xs text-muted-foreground">Search Location</p>
+                    <button
+                      onClick={() => setIsEditingLocation(!isEditingLocation)}
+                      className="text-xs text-primary hover:underline"
+                    >
+                      {isEditingLocation ? "Cancel" : "Edit"}
+                    </button>
+                  </div>
+                  {isEditingLocation ? (
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={locationInput}
+                        onChange={(e) => setLocationInput(e.target.value)}
+                        placeholder="Enter your location (e.g., Downtown, Market Area)"
+                        className="flex-1 px-3 py-2 text-sm border border-border rounded-md bg-background text-foreground"
+                      />
+                      <Button onClick={handleSaveLocation} size="sm" className="bg-primary hover:bg-primary/90">
+                        Save
+                      </Button>
+                    </div>
+                  ) : (
+                    <p className="text-sm font-medium text-foreground">{userLocation || "No location set"}</p>
+                  )}
                 </div>
               </div>
 
